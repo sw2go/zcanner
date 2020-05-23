@@ -106,6 +106,7 @@
                       if (err && !(err instanceof ZXing.NotFoundException)) {
                         console.error(err)
                         document.getElementById('result').textContent = err
+                        stopScanner();
                       }
                     });
                     console.log(`Started continous decode from camera with id ${selectedDeviceId}`);
@@ -129,27 +130,6 @@
               codeReader.reset();
             };
           };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-          document.getElementById('resetButton').addEventListener('click', () => {
-            codeReader.reset()
-            document.getElementById('result').textContent = '';
-            console.log('Reset.')
-          });
-
         })
         .catch((err) => {
           console.error(err)
