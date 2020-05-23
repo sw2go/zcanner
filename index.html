@@ -10,22 +10,23 @@
 </head>
 
 <body>
-  <!-- Trigger/Open The Modal -->
-<button id="myBtn">Open Modal</button>
+  <pre><code id="result"></code></pre>
+    <!-- Trigger/Open The Modal -->
+  <button id="myBtn">Open Modal</button>
 
-<!-- The Modal -->
-<div id="myModal" class="modal">
+  <!-- The Modal -->
+  <div id="myModal" class="modal">
 
-  <!-- Modal content -->
-  <div class="modal-content">
-    <span class="close">&times;</span>
-    <div>
-      <video id="video" width="100%" style="border: 1px solid gray"></video>
+    <!-- Modal content -->
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <div>
+        <video id="video" width="100%" style="border: 1px solid gray"></video>
+      </div>
+      <p>Some text in the Modal..</p>
     </div>
-    <p>Some text in the Modal..</p>
-  </div>
 
-</div>
+  </div>
 
   <main class="wrapper" style="padding-top:2em">
 
@@ -45,7 +46,7 @@
       </div>
 
       <label>Result:</label>
-      <pre><code id="result"></code></pre>
+     
 
     </section>
 
@@ -96,6 +97,7 @@
             // When the user clicks on the button, open the modal
             btn.onclick = function() {
               console.log("start scanner");
+              document.getElementById('result').textContent = '';
               modal.style.display = "block";
               codeReader.decodeFromVideoDevice(selectedDeviceId, 'video', (result, err) => {
                       if (result) {
