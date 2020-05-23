@@ -1,3 +1,19 @@
+.scan-result {
+  display: inline-block;
+  width: 20em;
+  min-height: 1em;
+  border-style: solid;
+  border-color: black;
+}
+
+#scanbutton {
+  display: inline-block;
+  background-color: brown;
+}
+
+
+
+
 /* The Modal (background) */
 .modal {
     display: none; /* Hidden by default */
