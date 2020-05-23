@@ -99,8 +99,9 @@
               modal.style.display = "block";
               codeReader.decodeFromVideoDevice(selectedDeviceId, 'video', (result, err) => {
                       if (result) {
-                        console.log(result)
-                        document.getElementById('result').textContent = result.text
+                        console.log(result);
+                        document.getElementById('result').textContent = result.text;
+                        stopScanner();
                       }
                       if (err && !(err instanceof ZXing.NotFoundException)) {
                         console.error(err)
