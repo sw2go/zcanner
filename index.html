@@ -10,9 +10,9 @@
 </head>
 
 <body>
-  <pre><code id="result"></code></pre>
+  <pre><code id="scanResult"></code></pre>
     <!-- Trigger/Open The Modal -->
-  <button id="myBtn">Open Modal</button>
+  <button id="scanButton">Scan</button>
 
   <!-- The Modal -->
   <div id="myModal" class="modal">
@@ -66,7 +66,7 @@
       var modal = document.getElementById("myModal");
 
       // Get the button that opens the modal
-      var btn = document.getElementById("myBtn");
+      var btn = document.getElementById("scanButton");
 
       // Get the <span> element that closes the modal
       var span = document.getElementsByClassName("close")[0];
@@ -97,17 +97,17 @@
             // When the user clicks on the button, open the modal
             btn.onclick = function() {
               console.log("start scanner");
-              document.getElementById('result').textContent = '';
+              document.getElementById('scanResult').textContent = '';
               modal.style.display = "block";
               codeReader.decodeFromVideoDevice(selectedDeviceId, 'video', (result, err) => {
                       if (result) {
                         console.log(result);
-                        document.getElementById('result').textContent = result.text;
+                        document.getElementById('scanResult').textContent = result.text;
                         stopScanner();
                       }
                       if (err && !(err instanceof ZXing.NotFoundException)) {
                         console.error(err)
-                        document.getElementById('result').textContent = err
+                        document.getElementById('scanResult').textContent = err
                         stopScanner();
                       }
                     });
