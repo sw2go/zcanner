@@ -11,16 +11,15 @@
   </head>
 
   <body>
-    <div>
-
-    </div>
+    <input type="text" class="scan-result" id="scanResult"   >
+    <!--
     <pre class="scan-result"><code id="scanResult"></code></pre>
+    -->
       <!-- Trigger/Open The Modal -->
     <button id="scanButton">Scan</button>
 
     <!-- The Modal -->
-    <div id="myModal" class="modal">
-
+    <div id="scanModal" class="modal">
       <!-- Modal content -->
       <div class="modal-content">
         <span class="close">&times;</span>
@@ -28,18 +27,11 @@
           <video id="video" width="100%" style="border: 1px solid gray"></video>
         </div>
       </div>
-
     </div>
 
     <main class="wrapper" style="padding-top:2em">
 
       <section class="container" id="demo-content">
-        <h1 class="title">Scan</h1>
-        <div>
-          <a class="button" id="startButton">Start</a>
-          <a class="button" id="resetButton">Reset</a>
-        </div>
-
         <div id="sourceSelectPanel" style="display:none">
           <label for="sourceSelect">Change video source:</label>
           <select id="sourceSelect" >
@@ -60,10 +52,10 @@
       window.addEventListener('load', function () {
 
         // Get the modal
-        var modal = document.getElementById("myModal");
+        var modal = document.getElementById("scanModal");
 
         // Get the button that opens the modal
-        var btn = document.getElementById("scanButton");
+        var scanButton = document.getElementById("scanButton");
 
         // Get the <span> element that closes the modal
         var span = document.getElementsByClassName("close")[0];
@@ -92,10 +84,11 @@
               sourceSelectPanel.style.display = 'block'
 
               // When the user clicks on the button, open the modal
-              btn.onclick = function() {
+              scanButton.onclick = function() {
                 console.log("start scanner");
                 document.getElementById('scanResult').textContent = '';
                 modal.style.display = "block";
+                scanButton.style.display = "none";
                 codeReader.decodeFromVideoDevice(selectedDeviceId, 'video', (result, err) => {
                   if (result) {
                     console.log(result);
@@ -126,6 +119,7 @@
               function stopScanner() {
                 console.log("stop scanner");
                 modal.style.display = "none";
+                scanButton.style.display = "inline";
                 codeReader.reset();
               };
             };
