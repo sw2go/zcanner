@@ -23,7 +23,7 @@
       <!-- Modal content -->
       <div class="modal-content">
         <span class="close">&times;</span>
-        <div id="sourceSelectPanel" style="display:none">
+        <div id="sourceSelectPanel">
           <label for="sourceSelect">Change video source:</label>
           <select id="sourceSelect" >
           </select>
@@ -63,31 +63,60 @@
         // Get the <span> element that closes the modal
         var span = document.getElementsByClassName("close")[0];
 
+        const sourceSelectPanel = document.getElementById('sourceSelectPanel');
+        sourceSelectPanel.style.display = "none";
+
         let selectedDeviceId;
-        const codeReader = new ZXing.BrowserMultiFormatReader()
-        console.log('ZXing code reader initialized')
+        const codeReader =  new ZXing.BrowserMultiFormatReader();
+        
+        
+        
+        console.log('ZXing code reader initialized');
         codeReader.getVideoInputDevices()
           .then((videoInputDevices) => {
-            const sourceSelect = document.getElementById('sourceSelect')
-            selectedDeviceId = videoInputDevices[0].deviceId
+
+            const sourceSelect = document.getElementById('sourceSelect');
+            selectedDeviceId = videoInputDevices[0].deviceId;
             console.log(`${videoInputDevices.length} video input(s) available`);
             if (videoInputDevices.length >= 1) {           
               videoInputDevices.forEach((element) => {
-                const sourceOption = document.createElement('option')
-                sourceOption.text = element.label
-                sourceOption.value = element.deviceId
-                sourceSelect.appendChild(sourceOption)
-              })
+                const sourceOption = document.createElement('option');
+                sourceOption.text = element.label;
+                sourceOption.value = element.deviceId;
+                sourceSelect.appendChild(sourceOption);
+              });
 
               sourceSelect.onchange = () => {
                 selectedDeviceId = sourceSelect.value;
               };
 
-              const sourceSelectPanel = document.getElementById('sourceSelectPanel')
-              sourceSelectPanel.style.display = 'block'
+              sourceSelectPanel.style.display = 'block';
 
               // When the user clicks on the button, open the modal
               scanButton.onclick = function() {
+                startScanning();
+              };
+
+              // When the user clicks on <span> (x), close the modal
+              span.onclick = function() {
+                stopScanning();
+              };
+
+              // When the user clicks anywhere outside of the modal, close it
+              window.onclick = function(event) {
+                if (event.target == modal) {
+                  stopScanning();
+                }
+              };
+
+              function stopScanning() {
+                console.log("stop scanner");
+                modal.style.display = "none";
+                scanButton.style.display = "inline";
+                codeReader.reset();
+              };
+
+              function startScanning() {
                 console.log("start scanner");
                 scanResult.value = '';
                 modal.style.display = "block";
@@ -96,39 +125,20 @@
                   if (result) {
                     console.log(result);
                     scanResult.value = result.text;
-                    stopScanner();
+                    stopScanning();
                   }
                   if (err && !(err instanceof ZXing.NotFoundException)) {
                     console.error(err)
-                    scanResult.value = err
-                    stopScanner();
+                    scanResult.value = err;
+                    stopScanning();
                   }
                 });
                 console.log(`Started continous decode from camera with id ${selectedDeviceId}`);
-              };
-
-              // When the user clicks on <span> (x), close the modal
-              span.onclick = function() {
-                stopScanner();
-              };
-
-              // When the user clicks anywhere outside of the modal, close it
-              window.onclick = function(event) {
-                if (event.target == modal) {
-                  stopScanner();
-                }
-              };
-
-              function stopScanner() {
-                console.log("stop scanner");
-                modal.style.display = "none";
-                scanButton.style.display = "inline";
-                codeReader.reset();
-              };
-            };
+              }
+            }
           })
           .catch((err) => {
-            console.error(err)
+            console.error(err);
           });
       });
     </script>
