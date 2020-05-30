@@ -23,6 +23,11 @@
       <!-- Modal content -->
       <div class="modal-content">
         <span class="close">&times;</span>
+        <div id="sourceSelectPanel" style="display:none">
+          <label for="sourceSelect">Change video source:</label>
+          <select id="sourceSelect" >
+          </select>
+        </div>
         <div>
           <video id="video" width="100%" style="border: 1px solid gray"></video>
         </div>
@@ -32,11 +37,7 @@
     <main class="wrapper" style="padding-top:2em">
 
       <section class="container" id="demo-content">
-        <div id="sourceSelectPanel" style="display:none">
-          <label for="sourceSelect">Change video source:</label>
-          <select id="sourceSelect" >
-          </select>
-        </div>
+
       </section>
 
       <footer class="footer">
@@ -56,6 +57,8 @@
 
         // Get the button that opens the modal
         var scanButton = document.getElementById("scanButton");
+
+        var scanResult = document.getElementById('scanResult');
 
         // Get the <span> element that closes the modal
         var span = document.getElementsByClassName("close")[0];
@@ -86,18 +89,18 @@
               // When the user clicks on the button, open the modal
               scanButton.onclick = function() {
                 console.log("start scanner");
-                document.getElementById('scanResult').textContent = '';
+                scanResult.value = '';
                 modal.style.display = "block";
                 scanButton.style.display = "none";
                 codeReader.decodeFromVideoDevice(selectedDeviceId, 'video', (result, err) => {
                   if (result) {
                     console.log(result);
-                    document.getElementById('scanResult').textContent = result.text;
+                    scanResult.value = result.text;
                     stopScanner();
                   }
                   if (err && !(err instanceof ZXing.NotFoundException)) {
                     console.error(err)
-                    document.getElementById('scanResult').textContent = err
+                    scanResult.value = err
                     stopScanner();
                   }
                 });
