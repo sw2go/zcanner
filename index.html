@@ -2,7 +2,6 @@
 <html lang="en">
 
   <head>
-    <link>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="author" content="sw2go">
@@ -11,11 +10,7 @@
   </head>
 
   <body>
-    <input type="text" class="scan-result" id="scanResult"   >
-    <!--
-    <pre class="scan-result"><code id="scanResult"></code></pre>
-    -->
-      <!-- Trigger/Open The Modal -->
+    <input  id="scanResult" type="text" class="scan-result"  >
     <button id="scanButton">Scan</button>
 
     <!-- The Modal -->
@@ -47,99 +42,38 @@
   <!--
     <script type="text/javascript" src="https://unpkg.com/@zxing/library@latest"></script>
   -->
-    <script type="text/javascript" src="script.js"></script>
-    <script type="text/javascript" src="zxing.min.js"></script>
+
+    <script type="text/javascript" src="./zxing.min.js"></script>
+    <script type="text/javascript" src="./script.js"></script>
     <script type="text/javascript">
       window.addEventListener('load', function () {
 
-        // Get the modal
-        var modal = document.getElementById("scanModal");
+        var scanDialog = document.getElementById("scanModal");
 
-        // Get the button that opens the modal
-        var scanButton = document.getElementById("scanButton");
+        var scanner = new Scanner(
+          scanDialog, 
+          document.getElementsByClassName("close")[0],
+          document.getElementById('sourceSelectPanel'),
+          document.getElementById('sourceSelect'),
+          document.getElementById('scanResult')
+        );
 
-        var scanResult = document.getElementById('scanResult');
-
-        // Get the <span> element that closes the modal
-        var span = document.getElementsByClassName("close")[0];
-
-        const sourceSelectPanel = document.getElementById('sourceSelectPanel');
-        sourceSelectPanel.style.display = "none";
-
-        let selectedDeviceId;
-        const codeReader =  new ZXing.BrowserMultiFormatReader();
         
-        
-        
-        console.log('ZXing code reader initialized');
-        codeReader.getVideoInputDevices()
-          .then((videoInputDevices) => {
+        scanner.Init();
 
-            const sourceSelect = document.getElementById('sourceSelect');
-            selectedDeviceId = videoInputDevices[0].deviceId;
-            console.log(`${videoInputDevices.length} video input(s) available`);
-            if (videoInputDevices.length >= 1) {           
-              videoInputDevices.forEach((element) => {
-                const sourceOption = document.createElement('option');
-                sourceOption.text = element.label;
-                sourceOption.value = element.deviceId;
-                sourceSelect.appendChild(sourceOption);
-              });
+        document.getElementById("scanButton").onclick = function() {
+          scanner.Read();
+        };
 
-              sourceSelect.onchange = () => {
-                selectedDeviceId = sourceSelect.value;
-              };
+        document.getElementsByClassName("close")[0].onclick = function() {
+          scanner.Stop();
+        };
 
-              sourceSelectPanel.style.display = 'block';
-
-              // When the user clicks on the button, open the modal
-              scanButton.onclick = function() {
-                startScanning();
-              };
-
-              // When the user clicks on <span> (x), close the modal
-              span.onclick = function() {
-                stopScanning();
-              };
-
-              // When the user clicks anywhere outside of the modal, close it
-              window.onclick = function(event) {
-                if (event.target == modal) {
-                  stopScanning();
-                }
-              };
-
-              function stopScanning() {
-                console.log("stop scanner");
-                modal.style.display = "none";
-                scanButton.style.display = "inline";
-                codeReader.reset();
-              };
-
-              function startScanning() {
-                console.log("start scanner");
-                scanResult.value = '';
-                modal.style.display = "block";
-                scanButton.style.display = "none";
-                codeReader.decodeFromVideoDevice(selectedDeviceId, 'video', (result, err) => {
-                  if (result) {
-                    console.log(result);
-                    scanResult.value = result.text;
-                    stopScanning();
-                  }
-                  if (err && !(err instanceof ZXing.NotFoundException)) {
-                    console.error(err)
-                    scanResult.value = err;
-                    stopScanning();
-                  }
-                });
-                console.log(`Started continous decode from camera with id ${selectedDeviceId}`);
-              }
-            }
-          })
-          .catch((err) => {
-            console.error(err);
-          });
+        window.onclick = function(event) {
+          if (event.target == scanDialog) {
+            scanner.Stop();
+          }
+        };
       });
     </script>
 
